@@ -98,7 +98,7 @@ Python 脚本
 
 ## 与 Obsidian 知识库集成
 
-这个工具最初为梁毅的「第二大脑」Obsidian 知识库系统设计。导出后的文件可以配合该系统的 [NotebookLM 批量导入工作流](CLAUDE.md) 自动归类到 `raw/notebooklm/` 目录并提取概念。
+这个工具最初为「第二大脑」Obsidian 知识库系统设计。导出后的文件可以配合该系统的 [NotebookLM 批量导入工作流](CLAUDE.md) 自动归类到 `raw/notebooklm/` 目录并提取概念。
 
 ## License
 

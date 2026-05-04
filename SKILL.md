@@ -11,8 +11,8 @@ Exports every source guide from every NotebookLM notebook into the vault as clea
 
 1. Opens each notebook (personal, shared, or featured)
 2. Clicks the "来源" (Sources) tab to reveal the source panel
-3. For each source: clicks it, waits for the source guide to load, extracts the AI-generated analysis
-4. Saves as a formatted `.md` file with frontmatter, saved under `notebooklm/<笔记本名>/<来源名>.md`
+3. For each source: checks if already exported → skips if exists; otherwise clicks it, waits for the source guide to load, extracts the AI-generated analysis
+4. Saves as a formatted `.md` file with frontmatter, saved under `raw/notebooklm/<笔记本名>/<来源名>.md`
 
 ## Prerequisites
 
@@ -58,8 +58,9 @@ The script:
 - Navigates to each notebook
 - Clicks "来源" to expand the source panel
 - Clicks each source via `.source-stretched-button.click()`
+  - **Skips already-exported sources** (checks file existence before processing)
 - Extracts the source guide content
-- Saves to `notebooklm/<笔记本名>/<来源名>.md`
+- Saves to `raw/notebooklm/<笔记本名>/<来源名>.md`
 
 ### 5. Output format
 
@@ -164,7 +165,7 @@ end tell'
 1. **Not 100% reliable**: ~5-10% of sources fail to click due to special characters in names
 2. **Content extraction is heuristic**: Uses "largest div with 来源指南" — may miss content if the DOM structure changes
 3. **Requires Chrome focus**: Chrome must be the frontmost window; don't use the computer during export
-4. **No incremental updates**: Re-exports everything; no change detection
+4. **Incremental export**: Already-exported sources are skipped by filename check — safe to re-run
 5. **Mac-only**: JXA is macOS-specific
 6. **Source types**: Handles articles, PDFs, YouTube videos, text snippets, and web links
 

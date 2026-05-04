@@ -7,7 +7,7 @@ Fixed: clicks "来源" tab to expand source panel before extracting.
 import subprocess, base64, json, re, os, sys, time
 from datetime import datetime
 
-VAULT_DIR = "/Users/mac/Documents/Obsidian Vault/notebooklm"
+VAULT_DIR = "/Users/mac/Documents/Obsidian Vault/raw/notebooklm"
 SLEEP_AFTER_CLICK = 2.5
 SLEEP_AFTER_NAV = 4
 
@@ -224,7 +224,17 @@ def process_notebook(uuid):
         return 0
 
     processed = 0
+    skipped = 0
     for i, source_name in enumerate(info['sources']):
+        # Dedup: skip if output file already exists
+        safe_name = source_name.replace('/', '-').replace(':', '：')[:80]
+        nb_dir = os.path.join(VAULT_DIR, info['title'].replace('/', '-'))
+        output_path = os.path.join(nb_dir, f"{safe_name}.md")
+        if os.path.exists(output_path):
+            print(f"  [{i+1}/{info['total']}] {source_name[:60]}... ⏭️ already exists")
+            skipped += 1
+            continue
+
         print(f"  [{i+1}/{info['total']}] {source_name[:60]}...", end=' ')
 
         # Ensure source panel is visible (re-click if needed)
@@ -257,7 +267,11 @@ def process_notebook(uuid):
         navigate_to(uuid)
         ensure_source_panel_open()
 
-    print(f"  Done: {processed}/{info['total']} processed")
+    summary = f"  Done: {processed} processed"
+    if skipped:
+        summary += f", {skipped} skipped (already exist)"
+    summary += f" / {info['total']} total"
+    print(summary)
     return processed
 
 if __name__ == '__main__':
